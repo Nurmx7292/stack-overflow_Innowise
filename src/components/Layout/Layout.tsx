@@ -1,81 +1,15 @@
-import { Outlet, Link, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import Header from './Header/Header'
+import Sidebar from './Sidebar/Sidebar'
 import styles from './Layout.module.css'
 
 export default function Layout() {
-  const location = useLocation()
-
   return (
     <div className={styles.layout}>
       <Header />
       
       <div className={styles.content}>
-        <div className={styles.sidebar}>
-          <div className={styles.userSection}>
-            <div className={styles.sidebarUser}>
-              <div className={styles.userIcon}>👤</div>
-              <span>denis</span>
-              <span>←</span>
-            </div>
-          </div>
-          
-          <ul className={styles.navLinks}>
-            <li>
-              <Link 
-                to="/" 
-                className={`${styles.navLink} ${location.pathname === '/' ? styles.active : ''}`}
-              >
-                <div className={styles.navIcon}>🏠</div>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/account" 
-                className={`${styles.navLink} ${location.pathname === '/account' ? styles.active : ''}`}
-              >
-                <div className={styles.navIcon}>👤</div>
-                My Account
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/posts/create" 
-                className={`${styles.navLink} ${location.pathname === '/posts/create' ? styles.active : ''}`}
-              >
-                <div className={styles.navIcon}>📄</div>
-                Post snippet
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/posts/my" 
-                className={`${styles.navLink} ${location.pathname === '/posts/my' ? styles.active : ''}`}
-              >
-                <div className={styles.navIcon}>📚</div>
-                My snippets
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/questions" 
-                className={`${styles.navLink} ${location.pathname === '/questions' ? styles.active : ''}`}
-              >
-                <div className={styles.navIcon}>❓</div>
-                Questions
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/users" 
-                className={`${styles.navLink} ${location.pathname === '/users' ? styles.active : ''}`}
-              >
-                <div className={styles.navIcon}>👥</div>
-                Users
-              </Link>
-            </li>
-          </ul>
-        </div>
+        <Sidebar />
         
         <div className={styles.main}>
           <Outlet />
