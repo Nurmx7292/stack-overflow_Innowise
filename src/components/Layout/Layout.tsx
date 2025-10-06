@@ -1,4 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
+import Header from './Header/Header'
 import styles from './Layout.module.css'
 
 export default function Layout() {
@@ -6,18 +7,7 @@ export default function Layout() {
 
   return (
     <div className={styles.layout}>
-      <header className={styles.header}>
-        <Link to="/" className={styles.logo}>
-          <span className={styles.logoIcon}>&lt;/&gt;</span> CODELANG
-        </Link>
-        <div className={styles.headerRight}>
-          <button className={styles.signOut}>SIGN OUT</button>
-          <div className={styles.language}>
-            <span>EN</span>
-            <span>▼</span>
-          </div>
-        </div>
-      </header>
+      <Header />
       
       <div className={styles.content}>
         <div className={styles.sidebar}>
