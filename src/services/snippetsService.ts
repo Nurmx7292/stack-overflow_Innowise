@@ -4,7 +4,7 @@ import type { SnippetsResponse, Snippet, SnippetsParams } from '../types/snippet
 export const snippetsService = {
   getSnippets: async (params: SnippetsParams = {}): Promise<SnippetsResponse> => {
     const response = await api.get('/api/snippets', { params })
-    return response.data
+    return response.data.data
   },
 
   getSnippet: async (id: number): Promise<Snippet> => {
