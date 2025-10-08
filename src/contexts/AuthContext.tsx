@@ -1,50 +1,63 @@
-import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
-import type { User, AuthState, LoginCredentials, RegisterCredentials, AuthContextType } from '../types/auth'
+import { createContext, useContext, useReducer, useEffect } from 'react'
+import type { ReactNode } from 'react'
+import type { AuthState } from '../types/auth'
+import { userService } from '../services/userService'
 
 interface AuthAction {
-  type: 'LOGIN_START' | 'LOGIN_SUCCESS' | 'LOGIN_ERROR' | 'LOGOUT' | 'SET_LOADING'
+  type: 'LOGIN_START' | 'LOGIN_SUCCESS' | 'LOGIN_ERROR' | 'LOGOUT' | 'SET_LOADING' | 'CLEAR_ERROR'
   payload?: any
 }
 
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
-  isLoading: true
+  isLoading: true,
+  error: null
 }
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
     case 'LOGIN_START':
-      return { ...state, isLoading: true }
+      return { ...state, isLoading: true, error: null }
     case 'LOGIN_SUCCESS':
       return {
         ...state,
         user: action.payload,
         isAuthenticated: true,
-        isLoading: false
+        isLoading: false,
+        error: null
       }
     case 'LOGIN_ERROR':
       return {
         ...state,
         user: null,
         isAuthenticated: false,
-        isLoading: false
+        isLoading: false,
+        error: action.payload || 'Authentication failed'
       }
     case 'LOGOUT':
       return {
         ...state,
         user: null,
         isAuthenticated: false,
-        isLoading: false
+        isLoading: false,
+        error: null
       }
     case 'SET_LOADING':
       return { ...state, isLoading: action.payload }
+    case 'CLEAR_ERROR':
+      return { ...state, error: null }
     default:
       return state
   }
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+interface AuthContextValue {
+  state: AuthState
+  dispatch: React.Dispatch<AuthAction>
+}
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
 interface AuthProviderProps {
   children: ReactNode
@@ -54,106 +67,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [state, dispatch] = useReducer(authReducer, initialState)
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    const userData = localStorage.getItem('user')
+    const user = userService.getUser()
     
-    if (token && userData) {
-      try {
-        const user = JSON.parse(userData)
-        dispatch({ type: 'LOGIN_SUCCESS', payload: user })
-      } catch (error) {
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
-        dispatch({ type: 'LOGIN_ERROR' })
-      }
+    if (user && userService.isAuthenticated()) {
+      dispatch({ type: 'LOGIN_SUCCESS', payload: user })
     } else {
+      userService.removeUser()
       dispatch({ type: 'SET_LOADING', payload: false })
     }
   }, [])
 
-  const login = async (credentials: LoginCredentials) => {
-    dispatch({ type: 'LOGIN_START' })
-    
-    try {
-      const response = await fetch('https://codelang.vercel.app/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      })
-
-      if (!response.ok) {
-        throw new Error('Login failed')
-      }
-
-      const data = await response.json()
-      
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify(data.user))
-      
-      dispatch({ type: 'LOGIN_SUCCESS', payload: data.user })
-    } catch (error) {
-      dispatch({ type: 'LOGIN_ERROR' })
-      throw error
-    }
-  }
-
-  const register = async (credentials: RegisterCredentials) => {
-    dispatch({ type: 'LOGIN_START' })
-    
-    try {
-      const response = await fetch('https://codelang.vercel.app/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: credentials.username,
-          password: credentials.password
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Registration failed')
-      }
-
-      const data = await response.json()
-      
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify(data.user))
-      
-      dispatch({ type: 'LOGIN_SUCCESS', payload: data.user })
-    } catch (error) {
-      dispatch({ type: 'LOGIN_ERROR' })
-      throw error
-    }
-  }
-
-  const logout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    dispatch({ type: 'LOGOUT' })
-  }
-
-  const value: AuthContextType = {
-    ...state,
-    login,
-    register,
-    logout
-  }
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ state, dispatch }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
-export function useAuth() {
+export function useAuthContext() {
   const context = useContext(AuthContext)
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuthContext must be used within an AuthProvider')
   }
   return context
 }
