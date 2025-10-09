@@ -1,18 +1,35 @@
 import { Link } from 'react-router-dom'
+import { useAuth } from '../../../hooks/useAuth'
 import styles from './Header.module.css'
 
 export default function Header() {
+  const { user, logout } = useAuth()
+
+  const handleSignOut = () => {
+    logout()
+  }
+
   return (
     <header className={styles.header}>
       <Link to="/" className={styles.logo}>
         <span className={styles.logoIcon}>&lt;/&gt;</span> CODELANG
       </Link>
       <div className={styles.headerRight}>
-        <div className={styles.userInfo}>
-          <span>denis</span>
-          <div className={styles.userIcon}>👤</div>
-        </div>
-        <button className={styles.signOut}>SIGN OUT</button>
+        {user ? (
+          <>
+            <div className={styles.userInfo}>
+              <span>{user.username}</span>
+              <div className={styles.userIcon}>👤</div>
+            </div>
+            <button className={styles.signOut} onClick={handleSignOut}>
+              SIGN OUT
+            </button>
+          </>
+        ) : (
+          <Link to="/login" className={styles.signOut}>
+            SIGN IN
+          </Link>
+        )}
         <div className={styles.language}>
           <span>EN</span>
           <span>▼</span>

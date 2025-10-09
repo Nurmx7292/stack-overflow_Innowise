@@ -1,24 +1,34 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../../hooks/useAuth'
-import type { LoginCredentials } from '../../../types/auth'
-import styles from './Login.module.css'
+import type { RegisterCredentials } from '../../../types/auth'
+import styles from './Register.module.css'
 
-export default function Login() {
-  const [credentials, setCredentials] = useState<LoginCredentials>({
+export default function Register() {
+  const [credentials, setCredentials] = useState<RegisterCredentials>({
     username: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   })
+  const [localError, setLocalError] = useState('')
   
-  const { login, loginError, isLoginPending } = useAuth()
+  const { register, registerError, isRegisterPending } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setLocalError('')
 
-    
-    await login(credentials)
-    navigate('/')
+    if (credentials.password !== credentials.confirmPassword) {
+      setLocalError('Passwords do not match')
+      return
+    }
+
+    try {
+      await register(credentials)
+      navigate('/login')
+    } catch (err) {
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +41,7 @@ export default function Login() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Login</h1>
+      <h1 className={styles.title}>Register</h1>
       
       <form onSubmit={handleSubmit} className={styles.form}>
         <input
@@ -54,21 +64,31 @@ export default function Login() {
           required
         />
         
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          value={credentials.confirmPassword}
+          onChange={handleChange}
+          className={styles.input}
+          required
+        />
+        
         <button 
           type="submit" 
           className={styles.button}
-          disabled={isLoginPending}
+          disabled={isRegisterPending}
         >
-          {isLoginPending ? 'Logging in...' : 'Login'}
+          {isRegisterPending ? 'Creating account...' : 'Register'}
         </button>
         
-        {loginError && (
-          <div className={styles.errorMessage}>{loginError}</div>
+        {(registerError || localError) && (
+          <div className={styles.errorMessage}>{registerError || localError}</div>
         )}
       </form>
       
       <div className={styles.link}>
-        Don't have an account? <Link to="/register">Register</Link>
+        Already have an account? <Link to="/login">Login</Link>
       </div>
     </div>
   )
