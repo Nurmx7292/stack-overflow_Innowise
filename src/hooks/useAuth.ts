@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { authService } from '../services/authService'
 import { userService } from '../services/userService'
 import { useAuthContext } from '../contexts/AuthContext'
@@ -7,7 +7,7 @@ import type { LoginCredentials, RegisterCredentials, AuthError } from '../types/
 export const useAuth = () => {
   const { state, dispatch } = useAuthContext()
 
-  const handleAuthError = useCallback((error: AuthError): string => {
+  const handleAuthError = (error: AuthError): string => {
     let errorMessage = error.message || 'Authentication failed'
     
     if (error.errors && error.errors.length > 0) {
@@ -20,49 +20,49 @@ export const useAuth = () => {
     }
     
     return errorMessage
-  }, [])
+  }
 
-  const login = useCallback(async (credentials: LoginCredentials): Promise<void> => {
-    dispatch({ type: 'LOGIN_START' })
-    
-    try {
-      const response = await authService.login(credentials)
+  const loginMutation = useMutation({
+    mutationFn: authService.login,
+    onSuccess: (response) => {
       userService.saveUser(response.user, response.token)
       dispatch({ type: 'LOGIN_SUCCESS', payload: response.user })
-    } catch (error: any) {
+    },
+    onError: (error: AuthError) => {
       const errorMessage = handleAuthError(error)
-      dispatch({ type: 'LOGIN_ERROR', payload: errorMessage })
       throw new Error(errorMessage)
     }
-  }, [dispatch, handleAuthError])
+  })
 
-  const register = useCallback(async (credentials: RegisterCredentials): Promise<void> => {
-    dispatch({ type: 'LOGIN_START' })
-    
-    try {
-      await authService.register(credentials)
-      dispatch({ type: 'SET_LOADING', payload: false })
-    } catch (error: any) {
+  const registerMutation = useMutation({
+    mutationFn: authService.register,
+    onError: (error: AuthError) => {
       const errorMessage = handleAuthError(error)
-      dispatch({ type: 'LOGIN_ERROR', payload: errorMessage })
       throw new Error(errorMessage)
     }
-  }, [dispatch, handleAuthError])
+  })
 
-  const logout = useCallback(() => {
+  const login = async (credentials: LoginCredentials): Promise<void> => {
+    await loginMutation.mutateAsync(credentials)
+  }
+
+  const register = async (credentials: RegisterCredentials): Promise<void> => {
+    await registerMutation.mutateAsync(credentials)
+  }
+
+  const logout = () => {
     userService.removeUser()
     dispatch({ type: 'LOGOUT' })
-  }, [dispatch])
-
-  const clearError = useCallback(() => {
-    dispatch({ type: 'CLEAR_ERROR' })
-  }, [dispatch])
+  }
 
   return {
     ...state,
     login,
     register,
     logout,
-    clearError
+    loginError: loginMutation.error?.message,
+    registerError: registerMutation.error?.message,
+    isLoginPending: loginMutation.isPending,
+    isRegisterPending: registerMutation.isPending
   }
 }
