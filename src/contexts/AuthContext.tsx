@@ -51,8 +51,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     
     if (user && userService.isAuthenticated()) {
       dispatch({ type: 'LOGIN_SUCCESS', payload: user })
-    } else {
-      userService.removeUser()
     }
   }, [])
 

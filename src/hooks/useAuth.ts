@@ -1,11 +1,37 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { authService } from '../services/authService'
 import { userService } from '../services/userService'
 import { useAuthContext } from '../contexts/AuthContext'
-import type { LoginCredentials, RegisterCredentials, AuthError } from '../types/auth'
+import type { LoginCredentials, RegisterCredentials, AuthError, User } from '../types/auth'
 
 export const useAuth = () => {
   const { state, dispatch } = useAuthContext()
+  const queryClient = useQueryClient()
+
+  const userQuery = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: async (): Promise<User> => {
+      try {
+        return await authService.getCurrentUser()
+      } catch (error: any) {
+        if (error.message.includes('401')) {
+          userService.removeUser()
+          queryClient.removeQueries({ queryKey: ['user'] })
+          queryClient.removeQueries({ queryKey: ['currentUser'] })
+          dispatch({ type: 'LOGOUT' })
+        }
+        throw error
+      }
+    },
+    enabled: userService.isAuthenticated(),
+    staleTime: 5 * 60 * 1000, 
+    retry: (failureCount, error: any) => {
+      if (error.message.includes('401')) {
+        return false
+      }
+      return failureCount < 3
+    }
+  })
 
   const handleAuthError = (error: AuthError): string => {
     let errorMessage = error.message || 'Authentication failed'
@@ -25,7 +51,9 @@ export const useAuth = () => {
   const loginMutation = useMutation({
     mutationFn: authService.login,
     onSuccess: (response) => {
-      userService.saveUser(response.user, response.token)
+      userService.saveUser(response.user)
+      queryClient.setQueryData(['user'], response.user)
+      queryClient.setQueryData(['currentUser'], response.user)
       dispatch({ type: 'LOGIN_SUCCESS', payload: response.user })
     },
     onError: (error: AuthError) => {
@@ -52,17 +80,25 @@ export const useAuth = () => {
 
   const logout = () => {
     userService.removeUser()
+    queryClient.removeQueries({ queryKey: ['user'] })
+    queryClient.removeQueries({ queryKey: ['currentUser'] })
+    queryClient.clear()
     dispatch({ type: 'LOGOUT' })
   }
 
+  const currentUser = userQuery.data || userService.getUser() || state.user
+  const isAuthenticated = !!currentUser
+
   return {
-    ...state,
+    user: currentUser,
+    isAuthenticated,
     login,
     register,
     logout,
     loginError: loginMutation.error?.message,
     registerError: registerMutation.error?.message,
     isLoginPending: loginMutation.isPending,
-    isRegisterPending: registerMutation.isPending
+    isRegisterPending: registerMutation.isPending,
+    isUserLoading: userQuery.isLoading
   }
 }

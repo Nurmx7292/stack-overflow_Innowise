@@ -4,7 +4,6 @@ const API_BASE_URL = 'https://codelang.vercel.app'
 
 export interface AuthResponse {
   user: User
-  token: string
 }
 
 
@@ -27,8 +26,7 @@ export const authService = {
       }
       throw error
     }
-
-    return data
+    return data.data
   },
 
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {
@@ -53,27 +51,24 @@ export const authService = {
       throw error
     }
 
-    return data
+    return data.data
   },
 
   async getCurrentUser(): Promise<User> {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      throw new Error('No token found')
+    const user = localStorage.getItem('user')
+    if (!user) {
+      throw new Error('No user found')
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    })
-
-    const data = await response.json()
-
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to get user')
+    try {
+      const userData = JSON.parse(user)
+      if (userData.expiresAt && Date.now() > userData.expiresAt) {
+        throw new Error('Session expired')
+      }
+      const { expiresAt, ...userWithoutExpiry } = userData
+      return userWithoutExpiry
+    } catch (error) {
+      throw new Error('Invalid user data')
     }
-
-    return data
   }
 }
