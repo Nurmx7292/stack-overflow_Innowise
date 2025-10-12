@@ -28,3 +28,43 @@ export interface UpdatePasswordData {
 export interface UpdateResponse {
   updatedCount: number
 }
+
+export interface UsersParams {
+  page?: number
+  limit?: number
+  sortBy?: string[]
+  search?: string
+  searchBy?: string[]
+}
+
+export interface UsersMeta {
+  itemsPerPage: number
+  totalItems: number
+  currentPage: number
+  totalPages: number
+  sortBy: [string, 'ASC' | 'DESC'][]
+  searchBy: string[]
+  search: string
+  select: string[]
+  filter: Record<string, any>
+}
+
+export interface UsersLinks {
+  first: string
+  previous: string
+  current: string
+  next: string
+  last: string
+}
+
+export interface UsersResponse {
+  data: User[]
+  meta: UsersMeta
+  links: UsersLinks
+}
+
+export interface User {
+  id: number
+  username: string
+  role: string
+}
