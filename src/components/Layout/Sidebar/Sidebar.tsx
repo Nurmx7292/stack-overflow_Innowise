@@ -1,15 +1,17 @@
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../../../hooks/useAuth'
 import styles from './Sidebar.module.css'
 
 export default function Sidebar() {
   const location = useLocation()
-
+  const { user } = useAuth()
+  console.log(user)
   return (
     <div className={styles.sidebar}>
       <div className={styles.userSection}>
         <div className={styles.sidebarUser}>
           <div className={styles.userIcon}>👤</div>
-          <span>denis</span>
+          <span>{user?.username || 'Guest'}</span>
           <span>←</span>
         </div>
       </div>

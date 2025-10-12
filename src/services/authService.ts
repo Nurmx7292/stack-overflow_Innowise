@@ -3,7 +3,7 @@ import type { LoginCredentials, RegisterCredentials, User, AuthError } from '../
 const API_BASE_URL = 'https://codelang.vercel.app'
 
 export interface AuthResponse {
-  user: User
+  data: User
 }
 
 
@@ -26,7 +26,7 @@ export const authService = {
       }
       throw error
     }
-    return data.data
+    return data
   },
 
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {

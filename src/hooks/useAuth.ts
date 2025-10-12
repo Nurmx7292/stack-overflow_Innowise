@@ -51,10 +51,10 @@ export const useAuth = () => {
   const loginMutation = useMutation({
     mutationFn: authService.login,
     onSuccess: (response) => {
-      userService.saveUser(response.user)
-      queryClient.setQueryData(['user'], response.user)
-      queryClient.setQueryData(['currentUser'], response.user)
-      dispatch({ type: 'LOGIN_SUCCESS', payload: response.user })
+      userService.saveUser(response.data)
+      queryClient.setQueryData(['user'], response.data)
+      queryClient.setQueryData(['currentUser'], response.data)
+      dispatch({ type: 'LOGIN_SUCCESS', payload: response.data })
     },
     onError: (error: AuthError) => {
       const errorMessage = handleAuthError(error)
