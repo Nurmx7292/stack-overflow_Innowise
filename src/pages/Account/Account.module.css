@@ -4,6 +4,26 @@
   margin: 0 auto;
 }
 
+.loadingMessage {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #666;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.errorMessage {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #d32f2f;
+  background: #ffebee;
+  border-radius: 8px;
+  border: 1px solid #ffcdd2;
+}
+
 .welcome {
   text-align: center;
   font-size: 24px;
@@ -199,4 +219,20 @@
 .editForm form {
   display: flex;
   flex-direction: column;
+}
+
+.inputError {
+  border-color: #ff3b30 !important;
+  background-color: #ffebee;
+}
+
+.saveButton:disabled,
+.changePasswordButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.saveButton:disabled:hover,
+.changePasswordButton:disabled:hover {
+  background: #ccc;
 }

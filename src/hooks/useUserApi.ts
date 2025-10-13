@@ -51,9 +51,18 @@ export const useUpdateUser = () => {
   
   return useMutation({
     mutationFn: userApiService.updateUser,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['currentUser'] })
-      queryClient.invalidateQueries({ queryKey: ['user'] })
+    onSuccess: (_, variables) => {
+      const currentUser = queryClient.getQueryData(['currentUser']) as any
+      
+      if (currentUser) {
+        const updatedUser = { ...currentUser, username: variables.username }
+        
+        queryClient.setQueryData(['currentUser'], updatedUser)
+        queryClient.setQueryData(['user'], updatedUser)
+        
+        userService.saveUser(updatedUser)
+      }
+      
       queryClient.invalidateQueries({ queryKey: ['users'] })
     },
     retry: 1

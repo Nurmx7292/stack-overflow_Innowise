@@ -17,6 +17,7 @@ export const userApiService = {
 
   async updateUser(data: UpdateUserData): Promise<UpdateResponse> {
     const response = await api.patch('/api/me', data)
+    console.log(response)
     return response.data.data
   },
 
