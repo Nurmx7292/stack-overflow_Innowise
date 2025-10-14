@@ -2,17 +2,9 @@ import type { User } from '../types/auth'
 
 const USER_KEY = 'user'
 
-interface UserWithExpiry extends User {
-  expiresAt: number
-}
-
 export const userService = {
-  saveUser(user: User, expiresInHours: number = 24): void {
-    const userData: UserWithExpiry = {
-      ...user,
-      expiresAt: Date.now() + (expiresInHours * 60 * 60 * 1000)
-    }
-    localStorage.setItem(USER_KEY, JSON.stringify(userData))
+  saveUser(user: User): void {
+    localStorage.setItem(USER_KEY, JSON.stringify(user))
   },
 
   removeUser(): void {
@@ -26,15 +18,7 @@ export const userService = {
         return null
       }
       
-      const user: UserWithExpiry = JSON.parse(userData)
-      
-      if (user.expiresAt && Date.now() > user.expiresAt) {
-        this.removeUser()
-        return null
-      }
-      
-      const { expiresAt, ...userWithoutExpiry } = user
-      return userWithoutExpiry
+      return JSON.parse(userData)
     } catch (error) {
       console.error('Error parsing user data:', error)
       this.removeUser()

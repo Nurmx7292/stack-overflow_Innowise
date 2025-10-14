@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { authService } from '../services/authService'
 import { userService } from '../services/userService'
 import { useAuthContext } from '../contexts/AuthContext'
-import type { LoginCredentials, RegisterCredentials, AuthError, User } from '../types/auth'
+import type { LoginCredentials, RegisterCredentials, AuthError } from '../types/auth'
 
 export const useAuth = () => {
   const { state, dispatch } = useAuthContext()
@@ -10,23 +10,11 @@ export const useAuth = () => {
 
   const userQuery = useQuery({
     queryKey: ['currentUser'],
-    queryFn: async (): Promise<User> => {
-      try {
-        return await authService.getCurrentUser()
-      } catch (error: any) {
-        if (error.message.includes('401')) {
-          userService.removeUser()
-          queryClient.removeQueries({ queryKey: ['user'] })
-          queryClient.removeQueries({ queryKey: ['currentUser'] })
-          dispatch({ type: 'LOGOUT' })
-        }
-        throw error
-      }
-    },
+    queryFn: authService.getCurrentUser,
     enabled: userService.isAuthenticated(),
     staleTime: 5 * 60 * 1000, 
     retry: (failureCount, error: any) => {
-      if (error.message.includes('401')) {
+      if (error.response?.status === 401) {
         return false
       }
       return failureCount < 3
@@ -82,7 +70,6 @@ export const useAuth = () => {
     userService.removeUser()
     queryClient.removeQueries({ queryKey: ['user'] })
     queryClient.removeQueries({ queryKey: ['currentUser'] })
-    queryClient.clear()
     dispatch({ type: 'LOGOUT' })
   }
 
