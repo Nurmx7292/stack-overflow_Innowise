@@ -1,4 +1,5 @@
 import type { Snippet } from '../../types/snippets'
+import CodeEditor from '../CodeEditor/CodeEditor'
 import styles from './SnippetCard.module.css'
 
 interface SnippetCardProps {
@@ -19,7 +20,12 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
         </div>
       </div>
       <div className={styles.code}>
-        <pre className={styles.codeBlock}>{snippet.code}</pre>
+        <CodeEditor
+          value={snippet.code}
+          onChange={() => {}}
+          language={snippet.language}
+          readOnly={true}
+        />
       </div>
       <div className={styles.actions}>
         <button className={styles.actionButton}>
