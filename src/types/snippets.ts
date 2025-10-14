@@ -41,3 +41,21 @@ export interface SnippetsParams {
   search?: string
   searchBy?: string[]
 }
+
+export interface CreateSnippetRequest {
+  code: string
+  language: string
+}
+
+export interface UpdateSnippetRequest {
+  code?: string
+  language?: string
+}
+
+export interface MarkSnippetRequest {
+  mark: 'like' | 'dislike'
+}
+
+export interface MarkSnippetResponse {
+  mark: 'like' | 'dislike'
+}
