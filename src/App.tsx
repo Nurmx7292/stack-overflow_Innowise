@@ -5,6 +5,7 @@ import Login from './pages/Auth/Login/Login'
 import Register from './pages/Auth/Register/Register'
 import Questions from './pages/Questions/Questions'
 import Users from './pages/Users/Users'
+import UserProfile from './pages/UserProfile/UserProfile'
 import Account from './pages/Account/Account'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="register" element={<Register />} />
         <Route path="questions" element={<Questions />} />
         <Route path="users" element={<Users />} />
+        <Route path="users/:id" element={<UserProfile />} />
         <Route path="account" element={<Account />} />
         <Route path="posts/create" element={<div>Create Post</div>} />
         <Route path="posts/my" element={<div>My Posts</div>} />

@@ -14,8 +14,9 @@ interface ProfileCardProps {
     correctAnswers: number
     regularAnswers: number
   }
-  onEditProfile: () => void
-  onDeleteAccount: () => void
+  onEditProfile?: () => void
+  onDeleteAccount?: () => void
+  readonly?: boolean
 }
 
 export default function ProfileCard({
@@ -24,7 +25,8 @@ export default function ProfileCard({
   role,
   statistics,
   onEditProfile,
-  onDeleteAccount
+  onDeleteAccount,
+  readonly = false
 }: ProfileCardProps) {
   return (
     <div className={styles.profileCard}>
@@ -38,14 +40,16 @@ export default function ProfileCard({
             <span>Id: {userId}</span>
             <span>Role: {role}</span>
           </div>
-          <div className={styles.actionButtons}>
-            <button className={styles.editButton} onClick={onEditProfile}>
-              <span>⎘</span>
-            </button>
-            <button className={styles.deleteButton} onClick={onDeleteAccount}>
-              <span>🗑️</span>
-            </button>
-          </div>
+          {!readonly && (
+            <div className={styles.actionButtons}>
+              <button className={styles.editButton} onClick={onEditProfile}>
+                <span>⎘</span>
+              </button>
+              <button className={styles.deleteButton} onClick={onDeleteAccount}>
+                <span>🗑️</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
