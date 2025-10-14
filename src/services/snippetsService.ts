@@ -42,6 +42,6 @@ export const snippetsService = {
 
   getLanguages: async (): Promise<string[]> => {
     const response = await api.get('/api/snippets/languages')
-    return response.data
+    return response.data.data
   }
 }

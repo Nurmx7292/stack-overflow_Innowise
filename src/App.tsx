@@ -7,6 +7,7 @@ import Questions from './pages/Questions/Questions'
 import Users from './pages/Users/Users'
 import UserProfile from './pages/UserProfile/UserProfile'
 import Account from './pages/Account/Account'
+import CreatePost from './pages/CreatePost/CreatePost'
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
         <Route path="users" element={<Users />} />
         <Route path="users/:id" element={<UserProfile />} />
         <Route path="account" element={<Account />} />
-        <Route path="posts/create" element={<div>Create Post</div>} />
+        <Route path="posts/create" element={<CreatePost />} />
         <Route path="posts/my" element={<div>My Posts</div>} />
       </Route>
     </Routes>
