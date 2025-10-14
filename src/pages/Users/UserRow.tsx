@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import type { User } from '../../types/user'
 import styles from './Users.module.css'
 
@@ -25,7 +26,9 @@ export default function UserRow({ user, index }: UserRowProps) {
         {user.id}
       </td>
       <td className={styles.tableCell}>
-        {user.username}
+        <Link to={`/users/${user.id}`} className={styles.usernameLink}>
+          {user.username}
+        </Link>
       </td>
       <td className={styles.tableCell}>
         <span className={`${styles.roleBadge} ${getRoleBadgeClass(user.role)}`}>
