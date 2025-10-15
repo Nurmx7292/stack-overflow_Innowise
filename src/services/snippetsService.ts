@@ -18,7 +18,7 @@ export const snippetsService = {
 
   getSnippet: async (id: number): Promise<Snippet> => {
     const response = await api.get(`/api/snippets/${id}`)
-    return response.data
+    return response.data.data
   },
 
   createSnippet: async (data: CreateSnippetRequest): Promise<Snippet> => {

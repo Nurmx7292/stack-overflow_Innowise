@@ -20,8 +20,8 @@ export interface Snippet {
   language: string
   code: string
   user: User
-  marks: Mark[]
-  comments: Comment[]
+  marks?: Mark[]
+  comments?: Comment[]
 }
 
 export interface SnippetsResponse {

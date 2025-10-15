@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { Snippet } from '../../types/snippets'
 import { useSnippetStats } from '../../hooks/useSnippetStats'
 import { useMarkSnippet } from '../../hooks/useSnippets'
@@ -8,10 +9,17 @@ import styles from './SnippetCard.module.css'
 
 interface SnippetCardProps {
   snippet: Snippet
+  showCommentsButton?: boolean
+  onCommentClick?: () => void
 }
 
-export default function SnippetCard({ snippet }: SnippetCardProps) {
+export default function SnippetCard({ 
+  snippet, 
+  showCommentsButton = true, 
+  onCommentClick 
+}: SnippetCardProps) {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const { likesCount, dislikesCount, commentsCount, userReaction } = useSnippetStats(snippet)
   const markSnippetMutation = useMarkSnippet()
 
@@ -107,10 +115,15 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
           <span>{localDislikesCount}</span>
           <span className={styles.dislikeIcon}>👎</span>
         </button>
-        <button className={`${styles.actionButton} ${styles.commentButton}`}>
-          <span>{commentsCount}</span>
-          <span className={styles.commentIcon}>💬</span>
-        </button>
+        {showCommentsButton && (
+          <button 
+            className={`${styles.actionButton} ${styles.commentButton}`}
+            onClick={onCommentClick || (() => navigate(`/posts/${snippet.id}`))}
+          >
+            <span>{commentsCount}</span>
+            <span className={styles.commentIcon}>💬</span>
+          </button>
+        )}
       </div>
     </div>
   )

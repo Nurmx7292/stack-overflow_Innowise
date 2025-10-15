@@ -9,6 +9,7 @@ import UserProfile from './pages/UserProfile/UserProfile'
 import Account from './pages/Account/Account'
 import CreatePost from './pages/CreatePost/CreatePost'
 import MySnippets from './pages/MySnippets/MySnippets'
+import Post from './pages/Post/Post'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="account" element={<Account />} />
         <Route path="posts/create" element={<CreatePost />} />
         <Route path="posts/my" element={<MySnippets />} />
+        <Route path="posts/:id" element={<Post />} />
       </Route>
     </Routes>
   )
