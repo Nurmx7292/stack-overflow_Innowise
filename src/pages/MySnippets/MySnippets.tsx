@@ -16,7 +16,7 @@ export default function MySnippets() {
   return (
     <div className={styles.page}>
       <SnippetsList 
-        userId={user.id} 
+        userId={user.id.toString()} 
         title="My Snippets" 
       />
     </div>

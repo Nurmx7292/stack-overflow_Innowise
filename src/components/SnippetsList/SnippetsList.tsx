@@ -4,7 +4,7 @@ import SnippetCard from '../SnippetCard/SnippetCard'
 import styles from './SnippetsList.module.css'
 
 interface SnippetsListProps {
-  userId?: number
+  userId?: string
   title?: string
 }
 

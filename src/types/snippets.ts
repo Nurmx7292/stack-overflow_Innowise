@@ -1,14 +1,27 @@
 export interface User {
-  id: number
+  id: string
   username: string
   role: string
 }
 
+export interface Mark {
+  id: string
+  type: 'like' | 'dislike'
+  user: User
+}
+
+export interface Comment {
+  id: string
+  content: string
+}
+
 export interface Snippet {
-  id: number
+  id: string
   language: string
   code: string
   user: User
+  marks: Mark[]
+  comments: Comment[]
 }
 
 export interface SnippetsResponse {
@@ -34,7 +47,7 @@ export interface SnippetsResponse {
 }
 
 export interface SnippetsParams {
-  userId?: number
+  userId?: string
   page?: number
   limit?: number
   sortBy?: string[]

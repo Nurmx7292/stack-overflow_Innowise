@@ -10,7 +10,7 @@ export interface UserStatistic {
 }
 
 export interface UserWithStatistic {
-  id: number
+  id: string
   username: string
   role: string
   statistic: UserStatistic
@@ -64,7 +64,7 @@ export interface UsersResponse {
 }
 
 export interface User {
-  id: number
+  id: string
   username: string
   role: string
 }

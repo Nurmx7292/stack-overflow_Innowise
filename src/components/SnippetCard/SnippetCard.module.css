@@ -100,6 +100,20 @@
   background-color: #f8f9fa;
 }
 
+
+.actionButton.active {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.actionButton.active .likeIcon {
+  color: #1976d2;
+}
+
+.actionButton.active .dislikeIcon {
+  color: #d32f2f;
+}
+
 .likeIcon {
   color: #d32f2f;
 }
