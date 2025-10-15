@@ -5,7 +5,6 @@ import styles from './Sidebar.module.css'
 export default function Sidebar() {
   const location = useLocation()
   const { user } = useAuth()
-  console.log(user)
   return (
     <div className={styles.sidebar}>
       <div className={styles.userSection}>

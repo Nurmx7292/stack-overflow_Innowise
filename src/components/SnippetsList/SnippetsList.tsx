@@ -3,7 +3,12 @@ import { useInfiniteSnippets } from '../../hooks/useInfiniteSnippets'
 import SnippetCard from '../SnippetCard/SnippetCard'
 import styles from './SnippetsList.module.css'
 
-export default function SnippetsList() {
+interface SnippetsListProps {
+  userId?: number
+  title?: string
+}
+
+export default function SnippetsList({ userId, title = 'Recent Snippets' }: SnippetsListProps) {
   const {
     data,
     fetchNextPage,
@@ -11,13 +16,13 @@ export default function SnippetsList() {
     isFetchingNextPage,
     isLoading,
     error
-  } = useInfiniteSnippets()
+  } = useInfiniteSnippets(userId ? { userId } : {})
 
   const allSnippets = useMemo(() => {
     return data?.pages.flatMap(page => page.data) || []
   }, [data])
 
-  const observerRef = useRef<IntersectionObserver>()
+  const observerRef = useRef<IntersectionObserver | undefined>(undefined)
   const lastElementRef = useCallback((node: HTMLDivElement) => {
     if (isFetchingNextPage) return
     if (observerRef.current) observerRef.current.disconnect()
@@ -39,7 +44,7 @@ export default function SnippetsList() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Recent Snippets</h1>
+       <h1 className={styles.title}>{title}</h1>
       <div className={styles.snippetsList}>
         {allSnippets.map((snippet, index) => {
           if (allSnippets.length === index + 1) {

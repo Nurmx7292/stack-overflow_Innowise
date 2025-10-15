@@ -13,7 +13,6 @@ export default function CreatePost() {
 
   const { data: languages = [], isLoading: languagesLoading } = useLanguages()
   const createSnippetMutation = useCreateSnippet()
-  console.log(languages)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     

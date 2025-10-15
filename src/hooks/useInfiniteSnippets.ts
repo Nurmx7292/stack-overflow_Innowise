@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { snippetsService } from '../services/snippetsService'
 import type { SnippetsParams } from '../types/snippets'
 
-export const useInfiniteSnippets = (params: Omit<SnippetsParams, 'page'> = {}) => {
+export const useInfiniteSnippets = (params: Omit<SnippetsParams, 'page'> = {} as Omit<SnippetsParams, 'page'>) => {
   return useInfiniteQuery({
     queryKey: ['snippets', 'infinite', params],
     queryFn: ({ pageParam = 1 }) => 
