@@ -16,6 +16,13 @@ export default function QuestionCard({ question }: QuestionCardProps) {
         <Link to={`/questions/${question.id}`} className={styles.titleLink}>
           <h3 className={styles.title}>{question.title}</h3>
         </Link>
+        <div className={styles.status}>
+          {question.isResolved ? (
+            <span className={styles.resolved}>✅ Resolved</span>
+          ) : (
+            <span className={styles.unresolved}>❓ Unresolved</span>
+          )}
+        </div>
       </div>
       
       <div className={styles.meta}>
@@ -25,11 +32,11 @@ export default function QuestionCard({ question }: QuestionCardProps) {
       <p className={styles.description}>{question.description}</p>
       
       <div className={styles.actions}>
-        <button className={styles.answersButton}>
+        <Link to={`/questions/${question.id}`} className={styles.answersButton}>
           <span className={styles.answersIcon}>💬</span>
           <span className={styles.answersCount}>{answersCount}</span>
           <span className={styles.answersText}>Answers</span>
-        </button>
+        </Link>
         <div className={styles.views}>
           <span className={styles.viewsIcon}>👁️</span>
         </div>

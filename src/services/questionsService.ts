@@ -15,7 +15,7 @@ export const questionsService = {
 
   getQuestion: async (id: string): Promise<Question> => {
     const response = await api.get(`/api/questions/${id}`)
-    return response.data
+    return response.data.data
   },
 
   createQuestion: async (data: CreateQuestionRequest): Promise<Question> => {

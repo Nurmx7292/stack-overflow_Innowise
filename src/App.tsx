@@ -11,6 +11,7 @@ import CreatePost from './pages/CreatePost/CreatePost'
 import MySnippets from './pages/MySnippets/MySnippets'
 import Post from './pages/Post/Post'
 import CreateQuestion from './pages/CreateQuestion/CreateQuestion'
+import QuestionDetail from './pages/QuestionDetail/QuestionDetail'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="register" element={<Register />} />
         <Route path="questions" element={<Questions />} />
         <Route path="questions/create" element={<CreateQuestion />} />
+        <Route path="questions/:id" element={<QuestionDetail />} />
         <Route path="users" element={<Users />} />
         <Route path="users/:id" element={<UserProfile />} />
         <Route path="account" element={<Account />} />

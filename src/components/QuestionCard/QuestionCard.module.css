@@ -20,6 +20,11 @@
   gap: 12px;
 }
 
+.status {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
 .statusIcon {
   font-size: 20px;
   color: #e74c3c;
@@ -85,10 +90,13 @@
   font-size: 14px;
   font-weight: 500;
   transition: background-color 0.2s ease;
+  text-decoration: none;
 }
 
 .answersButton:hover {
   background: #45a049;
+  text-decoration: none;
+  color: white;
 }
 
 .answersIcon {
@@ -113,5 +121,23 @@
 .viewsIcon {
   font-size: 16px;
   color: #0074cc;
+}
+
+.resolved {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.unresolved {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
