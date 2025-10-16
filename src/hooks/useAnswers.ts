@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { answersService } from '../services/answersService'
 import type { 
-  CreateAnswerRequest, 
   UpdateAnswerRequest, 
   AnswerState 
 } from '../types/questions'
@@ -19,10 +18,11 @@ export const useCreateAnswer = () => {
   
   return useMutation({
     mutationFn: answersService.createAnswer,
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['answers'] })
       queryClient.invalidateQueries({ queryKey: ['questions'] })
       queryClient.invalidateQueries({ queryKey: ['questions', 'infinite'] })
+      queryClient.invalidateQueries({ queryKey: ['question', variables.questionId] })
     },
   })
 }
@@ -37,6 +37,7 @@ export const useUpdateAnswer = () => {
       queryClient.invalidateQueries({ queryKey: ['answers'] })
       queryClient.invalidateQueries({ queryKey: ['questions'] })
       queryClient.invalidateQueries({ queryKey: ['questions', 'infinite'] })
+      queryClient.invalidateQueries({ queryKey: ['question'] })
     },
   })
 }
@@ -64,6 +65,7 @@ export const useDeleteAnswer = () => {
       queryClient.invalidateQueries({ queryKey: ['answers'] })
       queryClient.invalidateQueries({ queryKey: ['questions'] })
       queryClient.invalidateQueries({ queryKey: ['questions', 'infinite'] })
+      queryClient.invalidateQueries({ queryKey: ['question'] })
     },
   })
 }

@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom'
 import { useQuestion } from '../../hooks/useQuestions'
 import CodeEditor from '../../components/CodeEditor/CodeEditor'
 import Answer from '../../components/Answer/Answer'
+import AddAnswer from '../../components/AddAnswer/AddAnswer'
 import styles from './QuestionDetail.module.css'
 
 export default function QuestionDetail() {
@@ -82,6 +83,8 @@ export default function QuestionDetail() {
           )}
         </div>
       </div>
+
+      <AddAnswer questionId={questionId} />
     </div>
   )
 }
