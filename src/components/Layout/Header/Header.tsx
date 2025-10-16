@@ -17,6 +17,9 @@ export default function Header() {
       <div className={styles.headerRight}>
         {user ? (
           <>
+            <Link to="/questions/create" className={styles.askQuestion}>
+              Ask question
+            </Link>
             <div className={styles.userInfo}>
               <span>{user.username}</span>
               <div className={styles.userIcon}>👤</div>

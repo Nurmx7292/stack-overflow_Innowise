@@ -36,6 +36,22 @@
   font-size: 14px;
 }
 
+.askQuestion {
+  background-color: #0074cc;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.askQuestion:hover {
+  background-color: #0056b3;
+  text-decoration: none;
+}
+
 .signOut {
   background: none;
   border: none;

@@ -10,6 +10,7 @@ import Account from './pages/Account/Account'
 import CreatePost from './pages/CreatePost/CreatePost'
 import MySnippets from './pages/MySnippets/MySnippets'
 import Post from './pages/Post/Post'
+import CreateQuestion from './pages/CreateQuestion/CreateQuestion'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="questions" element={<Questions />} />
+        <Route path="questions/create" element={<CreateQuestion />} />
         <Route path="users" element={<Users />} />
         <Route path="users/:id" element={<UserProfile />} />
         <Route path="account" element={<Account />} />
