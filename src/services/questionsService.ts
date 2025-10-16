@@ -10,7 +10,7 @@ import type {
 export const questionsService = {
   getQuestions: async (params: QuestionsParams = {}): Promise<QuestionsResponse> => {
     const response = await api.get('/api/questions', { params })
-    return response.data
+    return response.data.data
   },
 
   getQuestion: async (id: string): Promise<Question> => {
