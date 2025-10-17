@@ -32,7 +32,7 @@ export default function Post() {
         snippet={snippet} 
         showCommentsButton={false}
       />
-      <CommentsSection snippetId={snippetId} />
+      <CommentsSection snippet={snippet} />
     </div>
   )
 }

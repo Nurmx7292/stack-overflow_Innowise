@@ -1,29 +1,51 @@
 import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
+import { useCreateComment } from '../../hooks/useComments'
+import Comment from '../../components/Comment/Comment'
+import type { Snippet } from '../../types/snippets'
 import styles from './CommentsSection.module.css'
 
 interface CommentsSectionProps {
-  snippetId: number
+  snippet: Snippet
 }
 
-export default function CommentsSection({ snippetId: _snippetId }: CommentsSectionProps) {
-  const { user, isAuthenticated } = useAuth()
+export default function CommentsSection({ snippet }: CommentsSectionProps) {
+  const { isAuthenticated } = useAuth()
   const [newComment, setNewComment] = useState('')
-  const [comments, setComments] = useState<any[]>([])
+  const [errors, setErrors] = useState<{ content?: string }>({})
+  
+  const createCommentMutation = useCreateComment()
 
-  const handleSubmitComment = (e: React.FormEvent) => {
+  const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newComment.trim() || !isAuthenticated) return
 
-    const comment = {
-      id: Date.now(),
-      content: newComment.trim(),
-      author: user?.username,
-      createdAt: new Date().toISOString()
+    const newErrors: { content?: string } = {}
+    
+    if (!newComment.trim()) {
+      newErrors.content = 'Comment content is required'
+    } else if (newComment.trim().length > 1000) {
+      newErrors.content = 'Comment must be less than 1000 characters'
     }
 
-    setComments(prev => [...prev, comment])
-    setNewComment('')
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+
+    setErrors({})
+
+    try {
+      console.log('Creating comment for snippet:', snippet.id, typeof snippet.id)
+      await createCommentMutation.mutateAsync({
+        content: newComment.trim(),
+        snippetId: parseInt(snippet.id)
+      })
+      
+      setNewComment('')
+    } catch (error) {
+      console.error('Failed to create comment:', error)
+    }
   }
 
   return (
@@ -45,37 +67,31 @@ export default function CommentsSection({ snippetId: _snippetId }: CommentsSecti
               placeholder="Write your comment..."
               className={styles.textarea}
               rows={3}
+              maxLength={1000}
             />
+            {errors.content && (
+              <span className={styles.error}>{errors.content}</span>
+            )}
           </div>
           <button 
             type="submit" 
             className={styles.submitButton}
-            disabled={!newComment.trim()}
+            disabled={!newComment.trim() || createCommentMutation.isPending}
           >
             <span className={styles.submitIcon}>💬</span>
-            Add Comment
+            {createCommentMutation.isPending ? 'Adding...' : 'Add Comment'}
           </button>
         </form>
       )}
 
       <div className={styles.commentsList}>
-        {comments.length === 0 ? (
+        {!snippet.comments || snippet.comments.length === 0 ? (
           <div className={styles.noComments}>
             No comments yet. Be the first to comment!
           </div>
         ) : (
-          comments.map((comment) => (
-            <div key={comment.id} className={styles.comment}>
-              <div className={styles.commentHeader}>
-                <span className={styles.commentAuthor}>{comment.author}</span>
-                <span className={styles.commentDate}>
-                  {new Date(comment.createdAt).toLocaleDateString()}
-                </span>
-              </div>
-              <div className={styles.commentContent}>
-                {comment.content}
-              </div>
-            </div>
+          snippet.comments.map((comment) => (
+            <Comment key={comment.id} comment={comment} />
           ))
         )}
       </div>

@@ -27,6 +27,9 @@
 
 .commentInput {
   margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .textarea {
@@ -113,5 +116,11 @@
 .commentContent {
   color: #555;
   line-height: 1.5;
+}
+
+.error {
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 500;
 }
 
