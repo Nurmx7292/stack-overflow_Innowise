@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { useCreateComment } from '../../hooks/useComments'
+import { useCommentsPolling } from '../../hooks/useCommentsPolling'
 import Comment from '../../components/Comment/Comment'
 import type { Snippet } from '../../types/snippets'
 import styles from './CommentsSection.module.css'
@@ -15,6 +16,14 @@ export default function CommentsSection({ snippet }: CommentsSectionProps) {
   const [errors, setErrors] = useState<{ content?: string }>({})
   
   const createCommentMutation = useCreateComment()
+  
+  useCommentsPolling({
+    snippetId: parseInt(snippet.id),
+    enabled: true,
+    interval: 3000,
+    pauseOnInactive: true,
+    pauseOnScroll: true
+  })
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault()
