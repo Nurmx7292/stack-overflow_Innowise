@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
+import { useAuth } from '../../hooks/useAuth'
 import type { Question } from '../../types/questions'
+import QuestionActions from '../QuestionActions/QuestionActions'
 import styles from './QuestionCard.module.css'
 
 interface QuestionCardProps {
@@ -7,7 +9,9 @@ interface QuestionCardProps {
 }
 
 export default function QuestionCard({ question }: QuestionCardProps) {
+  const { user } = useAuth()
   const answersCount = question.answers?.length || 0
+  const isOwner = user?.id.toString() === question.user.id
 
   return (
     <div className={styles.card}>
@@ -41,6 +45,8 @@ export default function QuestionCard({ question }: QuestionCardProps) {
           <span className={styles.viewsIcon}>👁️</span>
         </div>
       </div>
+
+      {isOwner && <QuestionActions question={question} />}
     </div>
   )
 }

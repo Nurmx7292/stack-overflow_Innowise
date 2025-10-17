@@ -28,6 +28,7 @@ export interface QuestionsParams {
   sortBy?: string[]
   search?: string
   searchBy?: string[]
+  userId?: string
 }
 
 export interface QuestionsResponse {

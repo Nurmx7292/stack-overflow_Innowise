@@ -1,10 +1,13 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useInfiniteQuestions } from '../../hooks/useInfiniteQuestions'
+import { useAuth } from '../../hooks/useAuth'
 import QuestionCard from '../../components/QuestionCard/QuestionCard'
 import styles from './Questions.module.css'
 
 export default function Questions() {
+  const { user } = useAuth()
+  
   const {
     data,
     fetchNextPage,
@@ -14,6 +17,11 @@ export default function Questions() {
     isError,
     error,
   } = useInfiniteQuestions()
+
+  const {
+    data: userQuestionsData,
+    isLoading: userQuestionsLoading,
+  } = useInfiniteQuestions({ userId: user?.id.toString() })
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -25,7 +33,21 @@ export default function Questions() {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
-  if (isLoading) {
+  const allQuestions = data?.pages.flatMap(page => page.data) || []
+  const userQuestions = userQuestionsData?.pages.flatMap(page => page.data) || []
+  
+  const sortedQuestions = useMemo(() => {
+    if (!user || userQuestions.length === 0) {
+      return allQuestions
+    }
+    
+    const userQuestionIds = new Set(userQuestions.map(q => q.id))
+    const otherQuestions = allQuestions.filter(q => !userQuestionIds.has(q.id))
+    
+    return [...userQuestions, ...otherQuestions]
+  }, [allQuestions, userQuestions, user])
+
+  if (isLoading || userQuestionsLoading) {
     return (
       <div className={styles.container}>
         <div className={styles.loading}>Loading questions...</div>
@@ -43,19 +65,17 @@ export default function Questions() {
     )
   }
 
-  const allQuestions = data?.pages.flatMap(page => page.data) || []
-
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Questions</h1>
       
       <div className={styles.questionsList}>
-        {allQuestions.length === 0 ? (
+        {sortedQuestions.length === 0 ? (
           <div className={styles.noQuestions}>
             No questions found. Be the first to ask a question!
           </div>
         ) : (
-          allQuestions.map((question) => (
+          sortedQuestions.map((question) => (
             <QuestionCard key={question.id} question={question} />
           ))
         )}
@@ -67,7 +87,7 @@ export default function Questions() {
         </div>
       )}
 
-      {!hasNextPage && allQuestions.length > 0 && (
+      {!hasNextPage && sortedQuestions.length > 0 && (
         <div className={styles.endOfList}>
           You've reached the end of the questions list.
         </div>
