@@ -11,6 +11,7 @@ export default function Login() {
   })
   
   const { login, loginError, isLoginPending } = useAuth()
+  console.log(loginError)
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { authService } from '../services/authService'
 import { userService } from '../services/userService'
 import { useAuthContext } from '../contexts/AuthContext'
-import type { LoginCredentials, RegisterCredentials, AuthError } from '../types/auth'
+import type { LoginCredentials, RegisterCredentials } from '../types/auth'
 
 export const useAuth = () => {
   const { state, dispatch } = useAuthContext()
@@ -21,19 +21,10 @@ export const useAuth = () => {
     }
   })
 
-  const handleAuthError = (error: AuthError): string => {
-    let errorMessage = error.message || 'Authentication failed'
-    
-    if (error.errors && error.errors.length > 0) {
-      const firstError = error.errors[0]
-      if (firstError.failures && firstError.failures.length > 0) {
-        errorMessage = firstError.failures[0]
-      } else if (firstError.message) {
-        errorMessage = firstError.message
-      }
-    }
-    
-    return errorMessage
+  const handleAuthError = (error: any): string => {
+    if (error.response?.data?.message) return error.response.data.message
+    if (error.message) return error.message
+    return 'Authentication failed'
   }
 
   const loginMutation = useMutation({
@@ -44,18 +35,12 @@ export const useAuth = () => {
       queryClient.setQueryData(['currentUser'], response.data)
       dispatch({ type: 'LOGIN_SUCCESS', payload: response.data })
     },
-    onError: (error: AuthError) => {
-      const errorMessage = handleAuthError(error)
-      throw new Error(errorMessage)
-    }
+    onError: () => {}
   })
 
   const registerMutation = useMutation({
     mutationFn: authService.register,
-    onError: (error: AuthError) => {
-      const errorMessage = handleAuthError(error)
-      throw new Error(errorMessage)
-    }
+    onError: () => {}
   })
 
   const login = async (credentials: LoginCredentials): Promise<void> => {
@@ -82,8 +67,8 @@ export const useAuth = () => {
     login,
     register,
     logout,
-    loginError: loginMutation.error?.message,
-    registerError: registerMutation.error?.message,
+    loginError: loginMutation.error ? handleAuthError(loginMutation.error) : undefined,
+    registerError: registerMutation.error ? handleAuthError(registerMutation.error) : undefined,
     isLoginPending: loginMutation.isPending,
     isRegisterPending: registerMutation.isPending,
     isUserLoading: userQuery.isLoading

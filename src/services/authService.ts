@@ -7,16 +7,25 @@ export interface AuthResponse {
 
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await api.post('/api/auth/login', credentials)
-    return response.data
+    try {
+      const response = await api.post('/api/auth/login', credentials)
+      return response.data
+    } catch (error) {
+      throw error
+    }
   },
 
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {
-    const response = await api.post('/api/register', {
-      username: credentials.username,
-      password: credentials.password
-    })
-    return response.data
+    try {
+      const response = await api.post('/api/register', {
+        username: credentials.username,
+        password: credentials.password
+      })
+      return response.data
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
   },
 
   async getCurrentUser(): Promise<User> {
