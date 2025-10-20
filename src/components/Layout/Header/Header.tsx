@@ -21,7 +21,6 @@ export default function Header() {
               Ask question
             </Link>
             <div className={styles.userInfo}>
-              <span>{user.username}</span>
               <div className={styles.userIcon}>👤</div>
             </div>
             <button className={styles.signOut} onClick={handleSignOut}>

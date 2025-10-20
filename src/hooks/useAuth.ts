@@ -22,6 +22,13 @@ export const useAuth = () => {
   })
 
   const handleAuthError = (error: any): string => {
+    const errors = error?.response?.data?.errors
+    if (Array.isArray(errors) && errors.length > 0) {
+      const failures = errors[0]?.failures
+      if (Array.isArray(failures) && failures.length > 0) {
+        return failures[0]
+      }
+    }
     if (error.response?.data?.message) return error.response.data.message
     if (error.message) return error.message
     return 'Authentication failed'

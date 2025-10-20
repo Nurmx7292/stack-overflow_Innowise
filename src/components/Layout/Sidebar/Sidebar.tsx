@@ -11,7 +11,6 @@ export default function Sidebar() {
         <div className={styles.sidebarUser}>
           <div className={styles.userIcon}>👤</div>
           <span>{user?.username || 'Guest'}</span>
-          <span>←</span>
         </div>
       </div>
       
