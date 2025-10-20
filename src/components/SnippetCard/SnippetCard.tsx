@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { Snippet } from '../../types/snippets'
 import { useSnippetStats } from '../../hooks/useSnippetStats'
-import { useMarkSnippet } from '../../hooks/useSnippets'
+import { useMarkSnippet, useUpdateSnippet } from '../../hooks/useSnippets'
 import { useAuth } from '../../hooks/useAuth'
 import CodeEditor from '../CodeEditor/CodeEditor'
 import styles from './SnippetCard.module.css'
@@ -11,12 +11,14 @@ interface SnippetCardProps {
   snippet: Snippet
   showCommentsButton?: boolean
   onCommentClick?: () => void
+  editable?: boolean
 }
 
 export default function SnippetCard({ 
   snippet, 
   showCommentsButton = true, 
-  onCommentClick 
+  onCommentClick,
+  editable = false
 }: SnippetCardProps) {
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -80,6 +82,27 @@ export default function SnippetCard({
       })
     }
   }
+  const [editedCode, setEditedCode] = useState(snippet.code)
+  const updateSnippetMutation = useUpdateSnippet()
+
+  useEffect(() => {
+    setEditedCode(snippet.code)
+  }, [snippet.code])
+
+  const isDirty = editable && editedCode !== snippet.code
+
+  const handleSave = () => {
+    if (!isDirty) return
+    updateSnippetMutation.mutate({
+      id: parseInt(snippet.id),
+      data: { code: editedCode.trim() }
+    })
+  }
+
+  const handleCancel = () => {
+    setEditedCode(snippet.code)
+  }
+
   return (
     <div className={styles.card}>
       <div className={styles.header}>
@@ -94,11 +117,29 @@ export default function SnippetCard({
       </div>
       <div className={styles.code}>
         <CodeEditor
-          value={snippet.code}
-          onChange={() => {}}
+          value={editedCode}
+          onChange={(v) => setEditedCode(v)}
           language={snippet.language}
-          readOnly={true}
+          readOnly={!editable}
         />
+        {isDirty && (
+          <div className={styles.actions}>
+            <button 
+              className={styles.actionButton}
+              onClick={handleSave}
+              disabled={updateSnippetMutation.isPending}
+            >
+              Save
+            </button>
+            <button 
+              className={styles.actionButton}
+              onClick={handleCancel}
+              disabled={updateSnippetMutation.isPending}
+            >
+              Cancel
+            </button>
+          </div>
+        )}
       </div>
       <div className={styles.actions}>
         <button 

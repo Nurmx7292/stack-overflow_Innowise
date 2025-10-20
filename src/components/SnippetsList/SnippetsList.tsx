@@ -50,11 +50,11 @@ export default function SnippetsList({ userId, title = 'Recent Snippets' }: Snip
           if (allSnippets.length === index + 1) {
             return (
               <div key={snippet.id} ref={lastElementRef}>
-                <SnippetCard snippet={snippet} />
+                <SnippetCard snippet={snippet} editable={!!userId} />
               </div>
             )
           }
-          return <SnippetCard key={snippet.id} snippet={snippet} />
+          return <SnippetCard key={snippet.id} snippet={snippet} editable={!!userId} />
         })}
         {isFetchingNextPage && (
           <div className={styles.loadingMore}>Loading more...</div>
