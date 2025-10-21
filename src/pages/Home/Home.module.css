@@ -1,0 +1,30 @@
+.page {
+  padding: 24px 0;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #000000;
+}
+
+.snippetsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loading {
+  text-align: center;
+  padding: 48px;
+  font-size: 18px;
+  color: #666;
+}
+
+.error {
+  text-align: center;
+  padding: 48px;
+  font-size: 18px;
+  color: #d32f2f;
+}

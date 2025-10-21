@@ -1,0 +1,143 @@
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e5e5e5;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.status {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.statusIcon {
+  font-size: 20px;
+  color: #e74c3c;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.titleLink {
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.4;
+}
+
+.titleLink:hover .title {
+  color: #0074cc;
+}
+
+.meta {
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #666;
+}
+
+.author {
+  font-weight: 500;
+}
+
+.description {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.answersButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+}
+
+.answersButton:hover {
+  background: #45a049;
+  text-decoration: none;
+  color: white;
+}
+
+.answersIcon {
+  font-size: 16px;
+}
+
+.answersCount {
+  font-weight: 600;
+}
+
+.answersText {
+  font-size: 13px;
+}
+
+.views {
+  display: flex;
+  align-items: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.viewsIcon {
+  font-size: 16px;
+  color: #0074cc;
+}
+
+.resolved {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.unresolved {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
